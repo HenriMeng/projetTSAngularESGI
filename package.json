@@ -2,9 +2,9 @@
   "name": "projettsangularesgi",
   "version": "1.0.0",
   "description": "Note 1 - Projet Typescript (FBerthelot)",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "start": "node index.js",
+    "start": "node index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/HenriMeng/projetTSAngularESGI/issues"
   },
-  "homepage": "https://github.com/HenriMeng/projetTSAngularESGI#readme"
+  "homepage": "https://github.com/HenriMeng/projetTSAngularESGI#readme",
+  "devDependencies": {
+    "typescript": "^4.2.3"
+  }
 }
