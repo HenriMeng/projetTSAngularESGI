@@ -1,7 +1,7 @@
-import { Pokemon } from "./models/Pokemon";
-
-
-let pikachu = new Pokemon({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Pokemon_1 = require("./models/Pokemon");
+var pikachu = new Pokemon_1.Pokemon({
     name: "Pikachu",
     hp: 1,
     speed: 1,
@@ -10,8 +10,7 @@ let pikachu = new Pokemon({
     specialAttack: 1,
     specialDefense: 1
 });
-
-let bulbizarre = new Pokemon({
+var bulbizarre = new Pokemon_1.Pokemon({
     name: "Bulbizarre",
     hp: 1,
     speed: 1,
@@ -20,8 +19,6 @@ let bulbizarre = new Pokemon({
     specialAttack: 1,
     specialDefense: 1
 });
-
 console.log(pikachu.introducesHimself());
 console.log(bulbizarre.introducesHimself());
-
-console.log(pikachu.fight(bulbizarre));
+pikachu.fight(bulbizarre);

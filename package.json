@@ -4,9 +4,10 @@
   "description": "Note 1 - Projet Typescript (FBerthelot)",
   "main": "src/index.ts",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "tsc && node target/index.js",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "clean": "rm -R target"
   },
   "repository": {
     "type": "git",
@@ -19,10 +20,12 @@
   },
   "homepage": "https://github.com/HenriMeng/projetTSAngularESGI#readme",
   "devDependencies": {
+    "@babel/core": "^7.13.14",
+    "@babel/preset-env": "^7.13.12",
+    "@babel/preset-typescript": "^7.13.0",
     "@types/jest": "^26.0.22",
+    "babel-jest": "^26.6.3",
+    "jest": "^26.6.3",
     "typescript": "^4.2.3"
-  },
-  "dependencies": {
-    "jest": "^26.6.3"
   }
 }
