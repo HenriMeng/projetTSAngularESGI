@@ -44,27 +44,33 @@ export class Pokemon {
         return `[SAY] my name is ${this.name}`;
     }
 
-    fight(ennemy: Pokemon): void {
-        console.log(`[COMBAT] ${this.name} VERSUS ${ennemy.name}`);
-
-        if (this.speed >= ennemy.speed) {
-            console.log(`[COMBAT] ${this.name} attaque en premier !`);
-            for (let i = 0; i < 6; i++) {
-                this.makeMoveRandomly(ennemy);
-            }
-        }
-        else if (this.speed < ennemy.speed) {
-            console.log(`[COMBAT] ${ennemy.name} attaque en premier !`);
-            ennemy.makeMoveRandomly(this);
-        }
-    }
-
     makeMoveRandomly(ennemy: Pokemon): void {
         const max = this.moves.length;
         const rand = Math.floor(Math.random() * max);
         const move = this.moves[rand];
-        console.log(`[COMBAT] ${this.name} utilise ${move.toString()} sur ${ennemy.name}`);
-        //return move;
+
+        if (move.pp > 0) {
+            move.pp--;
+            ennemy.hp -= move.power;
+            console.log(`[COMBAT] ${this.name} utilise ${move.toString()} sur ${ennemy.name}`);
+            console.log(`[COMBAT] ${ennemy.name} : ${ennemy.hp} HP`);
+        } else {
+            if (this.countNumberPP() != 0) {
+                this.makeMoveRandomly(ennemy);
+            } else {
+                console.log(`${this.name} est hors jeu ...`);
+                this.hp = 0;
+            }
+        }
+
+    }
+
+    countNumberPP(): number {
+        let result = 0;
+        this.moves.forEach(move => {
+            result += move.pp;
+        })
+        return result;
     }
 
 }

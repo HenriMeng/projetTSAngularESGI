@@ -6,4 +6,8 @@ export class FileUtils {
     static linebreak(): void {
         console.log(`\n-------------------------------------------------\n`);
     }
+
+    static linebreakfight(): void {
+        console.log(`----`);
+    }
 }
