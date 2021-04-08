@@ -1,24 +1,11 @@
-import { Pokemon } from "../models/Pokemon";
+import { FileUtils } from "../FileUtils";
 
-let pikachu = new Pokemon({
-    name: "Pikachu",
-    hp: 1,
-    speed: 1,
-    attack: 1,
-    defense: 1,
-    specialAttack: 1,
-    specialDefense: 1
-});
 
-let bulbizarre = new Pokemon({
-    name: "Bulbizarre",
-    hp: 1,
-    speed: 1,
-    attack: 1,
-    defense: 1,
-    specialAttack: 1,
-    specialDefense: 1
-});
+// SETUP ---------------------------------------------------------------------------------------------------------------
+
+const pikachu = FileUtils.myPokemons("Pikachu");
+
+// TESTS ---------------------------------------------------------------------------------------------------------------
 
 describe('testIntroducesHimself', () => {
     it('should return my name is Pikachu when a Pikachu introduces himself', () => {
@@ -27,9 +14,9 @@ describe('testIntroducesHimself', () => {
     });
 });
 
-describe('testFight', () => {
-    it('should return that a Pikachu attacks first if he is fighting with a Bulbizarre', () => {
-        const result = pikachu.fight(bulbizarre);
-        expect(result).toBe("[COMBAT] Pikachu attaque en premier !");
+describe('testCountNumberPP', () => {
+    it('should return 120 which represent the total pp of all moves of Pikachu', () => {
+        const result = pikachu.countNumberPP();
+        expect(result).toBe(120);
     });
 });

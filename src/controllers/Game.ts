@@ -33,6 +33,7 @@ export class Game {
 
         }
 
+        // determine the winner and the loser
         FileUtils.linebreakfight();
         let winner;
         let loser;
@@ -44,7 +45,6 @@ export class Game {
             winner = this.pk1.name;
         }
         console.log(`[FIN - COMBAT] ${winner} est K.O, ${loser} remporte le combat !`);
-
         FileUtils.linebreak();
     }
 

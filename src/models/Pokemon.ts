@@ -1,5 +1,4 @@
 import { Move } from "./Move";
-import { FileUtils } from "../FileUtils";
 import { PokemonType } from "./PokemonType";
 
 interface IPokemonProps {
@@ -11,12 +10,10 @@ interface IPokemonProps {
     specialAttack: number;
     specialDefense: number;
     type: PokemonType;
-    weight?: number;
-    height?: number;
-    moves?: Move[]
+    moves: Move[]
 }
 
-export class Pokemon {
+export class Pokemon implements IPokemonProps {
 
     name: string;
     hp: number;
@@ -26,9 +23,7 @@ export class Pokemon {
     specialAttack: number;
     specialDefense: number;
     type: PokemonType;
-    weight?: number;
-    height?: number;
-    moves?: Move[]
+    moves: Move[];
 
     constructor(props: IPokemonProps) {
         this.name = props.name;
@@ -39,10 +34,10 @@ export class Pokemon {
         this.specialAttack = props.specialAttack;
         this.specialDefense = props.specialDefense;
         this.type = props.type;
-        this.weight = props.weight;
-        this.height = props.height;
         this.moves = props.moves;
     }
+
+    // METHODS ---------------------------------------------------------------------------------------------------------
 
     introducesHimself(): string {
         return `[SAY] my name is ${this.name}`;
@@ -51,28 +46,30 @@ export class Pokemon {
     makeMoveRandomly(): number {
         const max = this.moves.length;
         const rand = Math.floor(Math.random() * max);
-        return rand;
 
-        /*if (move.pp > 0) {
-            move.pp--;
-            ennemy.hp -= move.power;
-            console.log(`[COMBAT] ${this.name} utilise ${move.toString()} sur ${ennemy.name}`);
-            console.log(`[COMBAT] ${ennemy.name} : ${ennemy.hp} HP`);
-        } else {
+        // verify the PP of moves
+        if (this.moves[rand].pp < 0) {
             if (this.countNumberPP() != 0) {
-                this.makeMoveRandomly(ennemy);
+                this.makeMoveRandomly();
             } else {
                 console.log(`${this.name} est hors jeu ...`);
                 this.hp = 0;
             }
-        }*/
+        }
+
+        return rand;
     }
 
     countNumberPP(): number {
         let result = 0;
-        this.moves.forEach(move => {
-            result += move.pp;
-        })
+
+        if (this.moves != null) {
+            this.moves.forEach(move => {
+                result += move.pp;
+            })
+            return result;
+        }
+
         return result;
     }
 

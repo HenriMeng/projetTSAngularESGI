@@ -7,7 +7,7 @@ interface IMoveProps {
     type: PokemonType;
 }
 
-export class Move {
+export class Move implements IMoveProps {
 
     name: string;
     power: number;
