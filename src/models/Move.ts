@@ -1,8 +1,10 @@
+import { PokemonType } from "./PokemonType";
+
 interface IMoveProps {
     name: string;
     power: number;
     pp: number;
-    type?: Element;
+    type: PokemonType;
 }
 
 export class Move {
@@ -10,7 +12,7 @@ export class Move {
     name: string;
     power: number;
     pp: number;
-    type?: Element;
+    type: PokemonType;
 
     constructor(props: IMoveProps) {
         this.name = props.name;

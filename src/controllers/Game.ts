@@ -1,5 +1,7 @@
 import { Pokemon } from "../models/Pokemon";
 import { FileUtils } from "../FileUtils";
+import { PokemonType } from "../models/PokemonType";
+import { Move } from "../models/Move";
 
 export class Game {
 
@@ -20,19 +22,29 @@ export class Game {
 
         for (let i = 0; this.pk1.hp > 0 && this.pk2.hp > 0; i++) {
             FileUtils.linebreakfight();
+            let attack;
             if ((i % 2) == 0) {
-                this.pk1.makeMoveRandomly(this.pk2);
+                attack = this.pk1.makeMoveRandomly();
+                this.makeEffect(this.pk1, attack, this.pk2);
             } else {
-                this.pk2.makeMoveRandomly(this.pk1);
+                attack = this.pk2.makeMoveRandomly();
+                this.makeEffect(this.pk2, attack, this.pk1);
             }
+
         }
 
         FileUtils.linebreakfight();
+        let winner;
+        let loser;
         if (this.pk1.hp < 0) {
-            console.log(`[FIN - COMBAT] ${this.pk1.name} n'a plus de HP, le gagnat est ${this.pk2.name} !`);
+            loser = this.pk1.name;
+            winner = this.pk2.name;
         } else {
-            console.log(`[FIN - COMBAT] ${this.pk2.name} n'a plus de HP, le gagnant est ${this.pk1.name} !`);
+            loser = this.pk2.name;
+            winner = this.pk1.name;
         }
+        console.log(`[FIN - COMBAT] ${winner} est K.O, ${loser} remporte le combat !`);
+
         FileUtils.linebreak();
     }
 
@@ -50,4 +62,57 @@ export class Game {
             }
         }
     }
+
+    typeEffect(moveType: PokemonType, pokemonType: PokemonType): number {
+
+        const typeEffect: number[][] = [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1/2, 0, 1, 1, 1/2, 1],  // Normal
+            [1, 1/2, 1/2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1/2, 1, 1/2, 2, 1],  // Fire
+            [1, 2, 1/2, 1/2, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1/2, 1, 1, 1],  // Water
+            [1, 1/2, 2, 1/2, 1, 1, 1, 1/2, 2, 1/2, 1, 1/2, 2, 1, 1/2, 1, 1/2, 1],  // Grass
+            [1, 1, 2, 1/2, 1/2, 1, 1, 1, 0, 2, 1, 1, 1, 1, 1/2, 1, 1, 1],  // Electric
+            [1, 1/2, 1/2, 2, 1, 1/2, 1, 1, 2, 2, 1, 1, 1, 1, 2, 1, 1/2, 1],  // Ice
+            [2, 1, 1, 1, 1, 2, 1, 1/2, 1, 1/2, 1/2, 1/2, 2, 0, 1, 2, 2, 1/2],  // Fighting
+            [1, 1, 1, 2, 1, 1, 1, 1/2, 1/2, 1, 1, 1, 1/2, 1/2, 1, 1, 0, 2],  // Poison
+            [1, 2, 1, 1/2, 2, 1, 1, 2, 1, 0, 1, 1/2, 2, 1, 1, 1, 2, 1],  // Ground
+            [1, 1, 1, 2, 1/2, 1, 1, 2, 1, 0, 1, 1/2, 2, 1, 1, 1, 2, 1],  // Flying
+            [1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1/2, 1, 1, 1, 1, 0, 1/2, 1],  // Psychic
+            [1, 1/2, 1, 2, 1, 1, 1/2, 1/2, 1, 1/2, 2, 1, 1, 1/2, 1, 2, 1/2, 1/2],  // Bug
+            [1, 2, 1, 1, 1, 2, 1/2, 1, 1/2, 2, 1, 2, 1, 1, 1, 1, 1/2, 1],  // Rock
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1/2, 1, 1],  // Ghost
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1/2, 0],  // Dragon
+            [1, 1, 1, 1, 1, 1, 1/2, 1, 1, 1, 2, 1, 1, 2, 1, 1/2, 1, 1/2],  // Dark
+            [1, 1/2, 1/2, 1, 1/2, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1/2, 2],  // Steel
+            [1, 1/2, 1, 1, 1, 1, 2, 1/2, 1, 1, 1, 1, 1, 1, 2, 2, 1/2, 1],  // Fairy
+        ];
+
+        const score = typeEffect[moveType][pokemonType];
+
+        switch (score) {
+            case 0:
+                console.log("Ça n'a aucun effet ...");
+                break;
+            case 1: break;
+            case 1/2:
+                console.log("Ce n'est pas très efficace ..");
+                break;
+            case 2:
+                console.log("C'est super efficace !");
+                break;
+        }
+
+        return score;
+    }
+
+    makeEffect(pokemon: Pokemon, moveNumber: number, target: Pokemon): void {
+        const attack = pokemon.moves[moveNumber];
+        console.log(`[COMBAT] ${pokemon.name} utilise ${attack.name}!`);
+
+        let damage = attack.power * this.typeEffect(attack.type, target.type);
+        attack.pp--;
+        target.hp -= damage;
+
+        console.log(`[COMBAT] ${target.name} perd ${damage} HP (HP restant : ${target.hp})`);
+    }
+
 }
