@@ -1,5 +1,5 @@
 import { Move } from "./models/Move";
-import { PokemonType } from "./models/PokemonType";
+import { PokemonType } from "./types/PokemonType";
 import { Pokemon } from "./models/Pokemon";
 
 export class FileUtils {
@@ -31,22 +31,32 @@ export class FileUtils {
                     name: "COUP DE BOULE",
                     power: 5,
                     pp: 20,
+                    speedCoef: 0.75,
                     type: PokemonType.Fighting
                 }, {
                     name: "VIVE ATTAQUE",
                     power: 2,
                     pp: 50,
+                    speedCoef: 1.5,
                     type: PokemonType.Normal
                 }, {
                     name: "ECLAIR",
                     power: 4,
                     pp: 10,
+                    speedCoef: 1,
                     type: PokemonType.Electric
                 }, {
                     name: "GROZ'YEUX",
                     power: 0,
                     pp: 40,
+                    speedCoef: 1.2,
                     type: PokemonType.Psychic
+                }, {
+                    name: "LANCE FLAMME",
+                    power: 40,
+                    pp: 40,
+                    speedCoef: 0.5,
+                    type: PokemonType.Fire
                 }]
             }),
             new Pokemon({
@@ -62,21 +72,25 @@ export class FileUtils {
                     name: "COUP DE BOULE",
                     power: 5,
                     pp: 20,
+                    speedCoef: 0.75,
                     type: PokemonType.Fighting
                 }, {
                     name: "VIVE ATTAQUE",
                     power: 2,
                     pp: 50,
+                    speedCoef: 1.5,
                     type: PokemonType.Normal
                 }, {
                     name: "ECLAIR",
                     power: 4,
                     pp: 10,
+                    speedCoef: 1,
                     type: PokemonType.Electric
                 }, {
                     name: "GROZ'YEUX",
                     power: 0,
                     pp: 40,
+                    speedCoef: 1.2,
                     type: PokemonType.Psychic
                 }]
             })

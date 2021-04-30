@@ -1,5 +1,5 @@
 import { Move } from "./Move";
-import { PokemonType } from "./PokemonType";
+import { PokemonType } from "../types/PokemonType";
 
 interface IPokemonProps {
     name: string;
@@ -43,7 +43,7 @@ export class Pokemon implements IPokemonProps {
         return `[SAY] my name is ${this.name}`;
     }
 
-    makeMoveRandomly(): number {
+    makeMoveRandomly(): Move {
         const max = this.moves.length;
         const rand = Math.floor(Math.random() * max);
 
@@ -57,7 +57,7 @@ export class Pokemon implements IPokemonProps {
             }
         }
 
-        return rand;
+        return this.moves[rand];
     }
 
     countNumberPP(): number {
@@ -71,6 +71,10 @@ export class Pokemon implements IPokemonProps {
         }
 
         return result;
+    }
+
+    isAlive(): boolean {
+        return this.hp > 0 ? true : false;
     }
 
 }

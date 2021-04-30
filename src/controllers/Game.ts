@@ -1,68 +1,102 @@
 import { Pokemon } from "../models/Pokemon";
 import { FileUtils } from "../FileUtils";
-import { PokemonType } from "../models/PokemonType";
+import { PokemonType } from "../types/PokemonType";
 import { Move } from "../models/Move";
 
 export class Game {
 
-    pk1: Pokemon;
-    pk2: Pokemon;
+    pokemon1: Pokemon;
+    pokemon2: Pokemon;
 
-    constructor(pk1: Pokemon, pk2: Pokemon) {
-        this.pk1 = pk1;
-        this.pk2 = pk2;
+    constructor(pokemon1: Pokemon, pokemon2: Pokemon) {
+        this.pokemon1 = pokemon1;
+        this.pokemon2 = pokemon2;
     }
 
-    fight(): void {
+    startFight(): void {
         FileUtils.linebreak();
-        console.log(`[DÉBUT - COMBAT] ${this.pk1.name} VERSUS ${this.pk2.name}`);
+        console.log(`[DÉBUT - COMBAT] ${this.pokemon1.name} VERSUS ${this.pokemon2.name}`);
+        setTimeout(() => this.fight(this.pokemon1, this.pokemon2), 1200);
+    }
 
-        //let first = this.whoIsFastest();
-        //console.log(`[COMBAT] ${first.name} attaque en premier !`);
-
-        for (let i = 0; this.pk1.hp > 0 && this.pk2.hp > 0; i++) {
+    /**
+     * 2 pokemons are fighting
+     * check if a pokemon is dead
+     * find the faster
+     * update their HP
+     * @param pk1
+     * @param pk2
+     */
+    fight(pk1: Pokemon, pk2: Pokemon): void {
+        if (pk1.isAlive() && pk2.isAlive()) {
             FileUtils.linebreakfight();
-            let attack;
-            if ((i % 2) == 0) {
-                attack = this.pk1.makeMoveRandomly();
-                this.makeEffect(this.pk1, attack, this.pk2);
+            const movePk1 = pk1.makeMoveRandomly();
+            const movePk2 = pk2.makeMoveRandomly();
+            const speedPk1 = pk1.speed * movePk1.speedCoef;
+            const speedPk2 = pk2.speed * movePk2.speedCoef;
+            const first = this.whoIsFaster(speedPk1, speedPk2);
+
+            if (first == 1) {
+                this.makeEffect(pk1, movePk1, pk2);
+                this.makeEffect(pk2, movePk2, pk1);
             } else {
-                attack = this.pk2.makeMoveRandomly();
-                this.makeEffect(this.pk2, attack, this.pk1);
+                this.makeEffect(pk2, movePk2, pk1);
+                this.makeEffect(pk1, movePk1, pk2);
             }
 
+            setTimeout(() => this.fight(pk1, pk2), 1200);
+        } else {
+            this.whoIsWinner(this.pokemon1, this.pokemon2);
         }
+    }
 
+    /**
+     * return 1 if the pk1 is faster
+     * return 2 if the pk2 is faster
+     * speed = pk.speed * move.speedCoef
+     * @param speedPk1
+     * @param speedPk2
+     */
+    whoIsFaster(speedPk1: number, speedPk2: number): number {
+        // pk1 has more AS
+        if (speedPk1 > speedPk2) return 1;
+
+        // pk2 has more AS
+        else if (speedPk2 > speedPk1) return 2;
+
+        // pk1, pk2 have the same AS, we will do it randomly
+        else {
+            const rand = Math.floor(Math.random() * 100);
+            return (rand % 2) == 0 ? 1 : 2;
+        }
+    }
+
+    /**
+     * find the winner
+     * @param pk1
+     * @param pk2
+     */
+    whoIsWinner(pk1: Pokemon, pk2: Pokemon): void {
         // determine the winner and the loser
         FileUtils.linebreakfight();
         let winner;
         let loser;
-        if (this.pk1.hp < 0) {
-            loser = this.pk1.name;
-            winner = this.pk2.name;
+        if (pk1.isAlive()) {
+            loser = pk2.name;
+            winner = pk1.name;
         } else {
-            loser = this.pk2.name;
-            winner = this.pk1.name;
+            loser = pk1.name;
+            winner = pk2.name;
         }
         console.log(`[FIN - COMBAT] ${winner} est K.O, ${loser} remporte le combat !`);
         FileUtils.linebreak();
     }
 
-    whoIsFastest(): Pokemon {
-        if (this.pk1.speed > this.pk2.speed) {  // pk1 has more AS
-            return this.pk1;
-        } else if (this.pk2.speed > this.pk1.speed) {  // pk2 has more AS
-            return this.pk2;
-        } else {  // pk1, pk2 have the same AS, we will do it randomly
-            const rand = Math.floor(Math.random() * 100);
-            if ((rand % 2) == 0) {
-                return this.pk1;
-            } else {
-                return this.pk2;
-            }
-        }
-    }
-
+    /**
+     * generate a coef DAMAGE
+     * @param moveType
+     * @param pokemonType
+     */
     typeEffect(moveType: PokemonType, pokemonType: PokemonType): number {
 
         const typeEffect: number[][] = [
@@ -87,7 +121,6 @@ export class Game {
         ];
 
         const score = typeEffect[moveType][pokemonType];
-
         switch (score) {
             case 0:
                 console.log("Ça n'a aucun effet ...");
@@ -104,12 +137,17 @@ export class Game {
         return score;
     }
 
-    makeEffect(pokemon: Pokemon, moveNumber: number, target: Pokemon): void {
-        const attack = pokemon.moves[moveNumber];
-        console.log(`[COMBAT] ${pokemon.name} utilise ${attack.name}!`);
+    /**
+     * update HP of the pokemon targeted by a move
+     * @param pokemon
+     * @param move
+     * @param target
+     */
+    makeEffect(pokemon: Pokemon, move: Move, target: Pokemon): void {
+        console.log(`[COMBAT] ${pokemon.name} utilise ${move.name}!`);
 
-        let damage = attack.power * this.typeEffect(attack.type, target.type);
-        attack.pp--;
+        let damage = move.power * this.typeEffect(move.type, target.type);
+        move.pp--;
         target.hp -= damage;
 
         console.log(`[COMBAT] ${target.name} perd ${damage} HP (HP restant : ${target.hp})`);
